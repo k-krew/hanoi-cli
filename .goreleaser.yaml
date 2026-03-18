@@ -15,7 +15,7 @@ builds:
       - -s -w -X main.version={{.Version}} -X main.commit={{.ShortCommit}} -X main.date={{.Date}}
 
 archives:
-  - format: tar.gz
+  - formats: [tar.gz]
     name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
 
 checksum:
@@ -30,7 +30,7 @@ changelog:
       - "^ci:"
       - "^chore:"
 
-brews:
+homebrew_casks:
   - repository:
       owner: k-krew
       name: homebrew-tap
@@ -38,7 +38,10 @@ brews:
     homepage: "https://github.com/k-krew/hanoi-cli"
     description: "Interactive rebalance advisor for Kubernetes"
     license: "Apache-2.0"
-    install: |
-      bin.install "hanoi-cli"
-    test: |
-      system "#{bin}/hanoi-cli", "--help"
+    binaries: [hanoi-cli]
+    hooks:
+      post:
+        install: |
+          if OS.mac?
+            system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/hanoi-cli"]
+          end
