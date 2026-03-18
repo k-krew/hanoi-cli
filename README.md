@@ -5,6 +5,25 @@
 
 hanoi-cli analyzes pod distribution across nodes, detects resource imbalance, generates safe redistribution plans, and simulates node failures - all without touching your cluster. The name is inspired by the Tower of Hanoi puzzle: controlled movement of workloads between constrained pegs.
 
+## Example
+
+```bash
+$ hanoi-cli analyze
+
+Cluster Imbalance Score: 42.3% -> 9.1%
+Improvement: 33.2%
+
+Nodes:
+  node-1               CPU:  82.5%  MEM:  71.0%  pods: 14 [HOTSPOT]
+  node-2               CPU:  35.0%  MEM:  28.0%  pods: 6
+  node-3               CPU:  20.0%  MEM:  15.0%  pods: 3
+
+Suggested Moves: 2
+  1. default/api-xyz: node-1 -> node-3
+  2. default/worker-abc: node-1 -> node-2
+...
+```
+
 ## Features
 
 - **Imbalance detection** - CPU and memory utilization per node, standard deviation, hotspot flagging (>=80%)
