@@ -16,16 +16,23 @@ hanoi-cli analyzes pod distribution across nodes, detects resource imbalance, ge
 
 ## Installation
 
+### Homebrew (macOS / Linux)
+
 ```bash
-git clone <repo-url> && cd hanoi-cli
+brew tap k-krew/tap
+brew install hanoi-cli
+```
+
+### From source
+
+```bash
+git clone https://github.com/k-krew/hanoi-cli.git && cd hanoi-cli
 go build -o hanoi-cli .
 ```
 
-Move the binary somewhere in your `$PATH` if you want to use it globally:
+### Binary download
 
-```bash
-mv hanoi-cli /usr/local/bin/
-```
+Grab the latest binary from [GitHub Releases](https://github.com/k-krew/hanoi-cli/releases) and place it in your `$PATH`.
 
 ## Quick Start
 
