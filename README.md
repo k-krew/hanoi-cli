@@ -1,7 +1,7 @@
 # hanoi-cli
 
-Claude Assisted
-CI
+![Claude Assisted](https://img.shields.io/badge/Made%20with-Claude-8A2BE2?logo=anthropic)
+![CI](https://github.com/k-krew/hanoi-cli/actions/workflows/ci.yml/badge.svg)
 
 hanoi-cli analyzes pod distribution across nodes, detects resource imbalance, generates safe redistribution plans, and simulates node failures - all without touching your cluster. The name is inspired by the Tower of Hanoi puzzle: controlled movement of workloads between constrained pegs.
 
