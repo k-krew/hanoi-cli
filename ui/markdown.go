@@ -4,9 +4,23 @@ import (
 	"fmt"
 	"io"
 
+	"hanoi-cli/analyzer"
 	"hanoi-cli/planner"
 	"hanoi-cli/simulator"
 )
+
+func nodeStatusMD(n analyzer.NodeUtilization) string {
+	switch {
+	case n.Cordoned && n.IsHotspot:
+		return "cordoned, hotspot"
+	case n.Cordoned:
+		return "cordoned"
+	case n.IsHotspot:
+		return "hotspot"
+	default:
+		return ""
+	}
+}
 
 func RenderAnalysisMarkdown(w io.Writer, plan *planner.Plan) {
 	fmt.Fprintf(w, "### Hanoi-CLI Cluster Analysis\n")
@@ -30,8 +44,8 @@ func RenderAnalysisMarkdown(w io.Writer, plan *planner.Plan) {
 	fmt.Fprintln(w, "|------|-----|--------|------|--------|")
 
 	for _, n := range plan.BeforeAnalysis.Nodes {
-		fmt.Fprintf(w, "| %s | %.1f%% | %.1f%% | %d |\n",
-			n.Name, n.CPUPercent*100, n.MemPercent*100, n.PodCount)
+		fmt.Fprintf(w, "| %s | %.1f%% | %.1f%% | %d | %s |\n",
+			n.Name, n.CPUPercent*100, n.MemPercent*100, n.PodCount, nodeStatusMD(n))
 	}
 	fmt.Fprintln(w)
 
@@ -80,11 +94,11 @@ func RenderSimulationMarkdown(w io.Writer, result *simulator.SimulationResult) {
 	}
 
 	fmt.Fprintln(w, "#### Surviving Nodes")
-	fmt.Fprintln(w, "| Node | CPU | Memory | Pods |")
-	fmt.Fprintln(w, "|------|-----|--------|------|")
+	fmt.Fprintln(w, "| Node | CPU | Memory | Pods | Status |")
+	fmt.Fprintln(w, "|------|-----|--------|------|--------|")
 
 	for _, n := range result.AfterAnalysis.Nodes {
-		fmt.Fprintf(w, "| %s | %.1f%% | %.1f%% | %d |\n",
-			n.Name, n.CPUPercent*100, n.MemPercent*100, n.PodCount)
+		fmt.Fprintf(w, "| %s | %.1f%% | %.1f%% | %d | %s |\n",
+			n.Name, n.CPUPercent*100, n.MemPercent*100, n.PodCount, nodeStatusMD(n))
 	}
 }
