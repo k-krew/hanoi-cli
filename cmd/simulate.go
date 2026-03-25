@@ -54,6 +54,8 @@ func runSimulate(cmd *cobra.Command, args []string) error {
 		ui.RenderSimulationShort(os.Stdout, result)
 	case "ui":
 		ui.RenderSimulation(os.Stdout, result)
+	case "md":
+		ui.RenderSimulationMarkdown(os.Stdout, result)
 	default:
 		ui.RenderSimulationText(os.Stdout, result)
 	}

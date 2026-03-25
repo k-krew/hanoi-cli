@@ -105,7 +105,7 @@ hanoi-cli simulate node-3 [flags]
 | `--kubeconfig` |       | `~/.kube/config` | Path to kubeconfig file                      |
 | `--context`    |       | current context  | Kubernetes context to use                    |
 | `--namespace`  | `-n`  | all namespaces   | Limit to a specific namespace                |
-| `--output`     | `-o`  | `text`           | Output format: `text`, `json`, `short`, `ui` |
+| `--output`     | `-o`  | `text`           | Output format: `text`, `json`, `short`, `ui`, `md` |
 | `--explain`    |       |                  | Explain why move N was chosen (1-based)      |
 
 
@@ -183,6 +183,36 @@ Suggested Moves (2):
 ```
 
 Cordoned nodes appear in dark grey with a `C` marker. Hotspot nodes appear in red with a `!` marker.
+
+### `md` - Markdown format for CI/CD integration
+
+Perfect for GitHub Actions, GitLab CI, and other platforms that support Markdown rendering.
+
+```bash
+hanoi-cli analyze -o md
+hanoi-cli simulate node-3 -o md
+```
+
+Example output:
+
+```markdown
+### Hanoi-CLI Cluster Analysis
+**Imbalance Score:** 42.3% -> 9.1% (Improvement: **33.2%**)
+
+**Hotspots:** 1
+  - node-1
+
+#### Nodes State
+| Node | CPU | Memory | Pods |
+|------|-----|--------|------|
+| node-1 | 82.5% | 71.0% | 14 |
+| node-2 | 35.0% | 28.0% | 6 |
+| node-3 | 20.0% | 15.0% | 3 |
+
+#### Suggested Moves (2)
+1. `default/api-xyz`: `node-1` -> `node-3`
+2. `default/worker-abc`: `node-1` -> `node-2`
+```
 
 ## Move Explanation
 

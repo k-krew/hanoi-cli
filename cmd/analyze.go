@@ -58,6 +58,8 @@ func runAnalyze(cmd *cobra.Command, args []string) error {
 		ui.RenderAnalysisShort(os.Stdout, plan)
 	case "ui":
 		ui.RenderAnalysis(os.Stdout, plan)
+	case "md":
+		ui.RenderAnalysisMarkdown(os.Stdout, plan)
 	default:
 		ui.RenderAnalysisText(os.Stdout, plan)
 	}
