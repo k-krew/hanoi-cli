@@ -203,15 +203,22 @@ Example output:
   - node-1
 
 #### Nodes State
-| Node | CPU | Memory | Pods |
-|------|-----|--------|------|
-| node-1 | 82.5% | 71.0% | 14 |
-| node-2 | 35.0% | 28.0% | 6 |
-| node-3 | 20.0% | 15.0% | 3 |
+| Node | CPU | Memory | Pods | Status |
+|------|-----|--------|------|--------|
+| node-1 | 82.5% | 71.0% | 14 | HOTSPOT |
+| node-2 | 35.0% | 28.0% | 6 | OK |
+| node-3 | 20.0% | 15.0% | 3 | OK |
 
 #### Suggested Moves (2)
 1. `default/api-xyz`: `node-1` -> `node-3`
 2. `default/worker-abc`: `node-1` -> `node-2`
+
+#### Projected State
+| Node | CPU | Memory | Pods | Status |
+|------|-----|--------|------|--------|
+| node-1 | 45.0% | 42.0% | 10 | OK |
+| node-2 | 52.5% | 45.0% | 9 | OK |
+| node-3 | 42.5% | 38.0% | 7 | OK |
 ```
 
 ## Move Explanation
