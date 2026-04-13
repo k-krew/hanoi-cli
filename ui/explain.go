@@ -18,27 +18,27 @@ func RenderExplanation(w io.Writer, exp *planner.MoveExplanation, format string)
 }
 
 func renderExplanationText(w io.Writer, exp *planner.MoveExplanation) {
-	fmt.Fprintf(w, "\n--- Explanation for move #%d ---\n\n", exp.MoveNumber)
+	_, _ = fmt.Fprintf(w, "\n--- Explanation for move #%d ---\n\n", exp.MoveNumber)
 
-	fmt.Fprintf(w, "Pod:    %s/%s\n", exp.PodNamespace, exp.PodName)
+	_, _ = fmt.Fprintf(w, "Pod:    %s/%s\n", exp.PodNamespace, exp.PodName)
 	if exp.PodOwner != "" {
-		fmt.Fprintf(w, "Owner:  %s\n", exp.PodOwner)
+		_, _ = fmt.Fprintf(w, "Owner:  %s\n", exp.PodOwner)
 	}
-	fmt.Fprintf(w, "CPU:    %dm    MEM: %dMi\n", exp.PodCPU, exp.PodMem/(1024*1024))
-	fmt.Fprintf(w, "Move:   %s -> %s\n\n", exp.FromNode, exp.ToNode)
+	_, _ = fmt.Fprintf(w, "CPU:    %dm    MEM: %dMi\n", exp.PodCPU, exp.PodMem/(1024*1024))
+	_, _ = fmt.Fprintf(w, "Move:   %s -> %s\n\n", exp.FromNode, exp.ToNode)
 
 	if exp.IsSimulation {
-		fmt.Fprintf(w, "Source node (%s): FAILED (simulated)\n", exp.FromNode)
+		_, _ = fmt.Fprintf(w, "Source node (%s): FAILED (simulated)\n", exp.FromNode)
 	} else {
-		fmt.Fprintf(w, "Source node (%s) utilization: CPU %.1f%%, MEM %.1f%%\n",
+		_, _ = fmt.Fprintf(w, "Source node (%s) utilization: CPU %.1f%%, MEM %.1f%%\n",
 			exp.FromNode, exp.FromCPU*100, exp.FromMem*100)
 	}
-	fmt.Fprintf(w, "Cluster score: %.1f%% -> %.1f%%\n\n", exp.ScoreBefore, exp.ScoreAfter)
+	_, _ = fmt.Fprintf(w, "Cluster score: %.1f%% -> %.1f%%\n\n", exp.ScoreBefore, exp.ScoreAfter)
 
-	fmt.Fprintln(w, "Candidate nodes:")
+	_, _ = fmt.Fprintln(w, "Candidate nodes:")
 	for _, c := range exp.Candidates {
 		if !c.Eligible {
-			fmt.Fprintf(w, "  %-20s REJECTED: %s\n", c.Name, c.Reason)
+			_, _ = fmt.Fprintf(w, "  %-20s REJECTED: %s\n", c.Name, c.Reason)
 			continue
 		}
 		label := "eligible"
@@ -46,11 +46,11 @@ func renderExplanationText(w io.Writer, exp *planner.MoveExplanation) {
 			label = "CHOSEN  "
 		}
 		affinityNote := affinityAnnotation(c)
-		fmt.Fprintf(w, "  %-20s %s CPU: %.1f%% -> %.1f%%  MEM: %.1f%% -> %.1f%%  score: %.1f%%%s\n",
+		_, _ = fmt.Fprintf(w, "  %-20s %s CPU: %.1f%% -> %.1f%%  MEM: %.1f%% -> %.1f%%  score: %.1f%%%s\n",
 			c.Name, label, c.CPUBefore*100, c.CPUAfter*100, c.MemBefore*100, c.MemAfter*100, c.ScoreIfChosen, affinityNote)
 	}
 
-	fmt.Fprintln(w)
+	_, _ = fmt.Fprintln(w)
 	chosen := findChosen(exp)
 	if chosen != nil {
 		best := true
@@ -61,10 +61,10 @@ func renderExplanationText(w io.Writer, exp *planner.MoveExplanation) {
 			}
 		}
 		if best {
-			fmt.Fprintf(w, "Verdict: %s produces the lowest imbalance score (%.1f%%) among all eligible nodes.\n",
+			_, _ = fmt.Fprintf(w, "Verdict: %s produces the lowest imbalance score (%.1f%%) among all eligible nodes.\n",
 				exp.ToNode, chosen.ScoreIfChosen)
 		} else {
-			fmt.Fprintf(w, "Verdict: %s was selected with score %.1f%%.\n",
+			_, _ = fmt.Fprintf(w, "Verdict: %s was selected with score %.1f%%.\n",
 				exp.ToNode, chosen.ScoreIfChosen)
 		}
 	}
@@ -144,7 +144,7 @@ func renderExplanationJSON(w io.Writer, exp *planner.MoveExplanation) {
 
 	enc := json.NewEncoder(w)
 	enc.SetIndent("", "  ")
-	enc.Encode(out)
+	_ = enc.Encode(out)
 }
 
 func affinityAnnotation(c planner.NodeCandidate) string {
