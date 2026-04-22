@@ -10,7 +10,7 @@ import (
 
 var (
 	kubeconfig  string
-	kubeContext  string
+	kubeContext string
 	namespace   string
 	output      string
 	explainMove int

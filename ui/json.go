@@ -16,22 +16,22 @@ type analysisJSON struct {
 		After       float64 `json:"after"`
 		Improvement float64 `json:"improvement"`
 	} `json:"imbalance_score"`
-	Hotspots []string       `json:"hotspots,omitempty"`
-	Nodes    []nodeJSON     `json:"nodes"`
-	Moves    []moveJSON     `json:"moves,omitempty"`
-	After    []nodeJSON     `json:"projected_state,omitempty"`
+	Hotspots []string   `json:"hotspots,omitempty"`
+	Nodes    []nodeJSON `json:"nodes"`
+	Moves    []moveJSON `json:"moves,omitempty"`
+	After    []nodeJSON `json:"projected_state,omitempty"`
 }
 
 type simulationJSON struct {
-	FailedNode     string                `json:"failed_node"`
-	Feasible       bool                  `json:"feasible"`
-	BeforeScore    float64               `json:"imbalance_before"`
-	AfterScore     float64               `json:"imbalance_after"`
-	Displaced      int                   `json:"displaced_pods"`
-	Rescheduled    int                   `json:"rescheduled_pods"`
-	Moves          []moveJSON            `json:"rescheduled_moves,omitempty"`
+	FailedNode     string                 `json:"failed_node"`
+	Feasible       bool                   `json:"feasible"`
+	BeforeScore    float64                `json:"imbalance_before"`
+	AfterScore     float64                `json:"imbalance_after"`
+	Displaced      int                    `json:"displaced_pods"`
+	Rescheduled    int                    `json:"rescheduled_pods"`
+	Moves          []moveJSON             `json:"rescheduled_moves,omitempty"`
 	Unschedulable  []unschedulablePodJSON `json:"unschedulable_pods,omitempty"`
-	SurvivingNodes []nodeJSON            `json:"surviving_nodes"`
+	SurvivingNodes []nodeJSON             `json:"surviving_nodes"`
 }
 
 type nodeJSON struct {

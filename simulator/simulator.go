@@ -22,16 +22,16 @@ type RescheduleMove struct {
 }
 
 type SimulationResult struct {
-	FailedNode       string
-	Feasible         bool
-	BeforeAnalysis   *analyzer.ClusterAnalysis
-	AfterAnalysis    *analyzer.ClusterAnalysis
-	BeforeScore      float64
-	AfterScore       float64
-	DisplacedPods    int
-	RescheduledPods  int
-	Moves            []RescheduleMove
-	Unschedulable    []UnschedulablePod
+	FailedNode      string
+	Feasible        bool
+	BeforeAnalysis  *analyzer.ClusterAnalysis
+	AfterAnalysis   *analyzer.ClusterAnalysis
+	BeforeScore     float64
+	AfterScore      float64
+	DisplacedPods   int
+	RescheduledPods int
+	Moves           []RescheduleMove
+	Unschedulable   []UnschedulablePod
 }
 
 func SimulateNodeFailure(nodes []kube.NodeInfo, pods []kube.PodInfo, targetNode string) *SimulationResult {
