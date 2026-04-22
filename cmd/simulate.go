@@ -24,6 +24,15 @@ func init() {
 	rootCmd.AddCommand(simulateCmd)
 }
 
+func nodeExists(nodes []kube.NodeInfo, name string) bool {
+	for _, n := range nodes {
+		if n.Name == name {
+			return true
+		}
+	}
+	return false
+}
+
 func runSimulate(cmd *cobra.Command, args []string) error {
 	nodeName := args[0]
 	ctx := context.Background()
@@ -36,6 +45,10 @@ func runSimulate(cmd *cobra.Command, args []string) error {
 	nodes, err := client.GetNodes(ctx)
 	if err != nil {
 		return fmt.Errorf("fetching nodes: %w", err)
+	}
+
+	if !nodeExists(nodes, nodeName) {
+		return fmt.Errorf("node %q does not exist in the cluster", nodeName)
 	}
 
 	pods, err := client.GetPods(ctx, namespace)
