@@ -89,6 +89,14 @@ func findBestMove(nodes []kube.NodeInfo, pods []kube.PodInfo, resourceType strin
 
 				cpuM := pod.Requests.CPU.MilliValue()
 				memB := pod.Requests.Memory.Value()
+
+				if snap.UsedCPU[dstNodeName]+cpuM > snap.AllocCPU[dstNodeName] {
+					continue
+				}
+				if snap.UsedMem[dstNodeName]+memB > snap.AllocMem[dstNodeName] {
+					continue
+				}
+
 				snap.MovePod(srcNode, dstNodeName, cpuM, memB)
 				trialScore := snap.Score()
 				snap.RevertPod(srcNode, dstNodeName, cpuM, memB)

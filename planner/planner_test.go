@@ -133,6 +133,64 @@ func TestApplyMove(t *testing.T) {
 	}
 }
 
+func TestGeneratePlan_RejectsOvercommitCPU(t *testing.T) {
+	nodes := []kube.NodeInfo{
+		makeNode("node-1", 4000, 8*1024*1024*1024),
+		makeNode("node-2", 1000, 8*1024*1024*1024),
+	}
+	// node-2 has only 1000m CPU; pod-a needs 1500m — a move there would overcommit
+	pods := []kube.PodInfo{
+		makePod("pod-a", "default", "node-1", "Deployment", 1500, 1*1024*1024*1024),
+		makePod("pod-b", "default", "node-1", "Deployment", 1500, 1*1024*1024*1024),
+	}
+
+	plan := GeneratePlan(nodes, pods, "cpu", 0)
+
+	for _, m := range plan.Moves {
+		if m.ToNode == "node-2" {
+			t.Errorf("planner suggested move to node-2 that would exceed CPU allocatable")
+		}
+	}
+}
+
+func TestGeneratePlan_RejectsOvercommitMemory(t *testing.T) {
+	nodes := []kube.NodeInfo{
+		makeNode("node-1", 4000, 8*1024*1024*1024),
+		makeNode("node-2", 4000, 1*1024*1024*1024),
+	}
+	// node-2 has only 1 GiB memory; pod-a needs 2 GiB — a move there would overcommit
+	pods := []kube.PodInfo{
+		makePod("pod-a", "default", "node-1", "Deployment", 500, 2*1024*1024*1024),
+		makePod("pod-b", "default", "node-1", "Deployment", 500, 2*1024*1024*1024),
+	}
+
+	plan := GeneratePlan(nodes, pods, "memory", 0)
+
+	for _, m := range plan.Moves {
+		if m.ToNode == "node-2" {
+			t.Errorf("planner suggested move to node-2 that would exceed memory allocatable")
+		}
+	}
+}
+
+func TestGeneratePlan_AllowsMoveWhenCapacityFits(t *testing.T) {
+	nodes := []kube.NodeInfo{
+		makeNode("node-1", 4000, 8*1024*1024*1024),
+		makeNode("node-2", 4000, 8*1024*1024*1024),
+	}
+	pods := []kube.PodInfo{
+		makePod("pod-a", "default", "node-1", "Deployment", 1000, 1*1024*1024*1024),
+		makePod("pod-b", "default", "node-1", "Deployment", 1000, 1*1024*1024*1024),
+		makePod("pod-c", "default", "node-1", "Deployment", 1000, 1*1024*1024*1024),
+	}
+
+	plan := GeneratePlan(nodes, pods, "cpu", 0)
+
+	if len(plan.Moves) == 0 {
+		t.Error("expected moves when destination node has sufficient capacity")
+	}
+}
+
 func TestClonePods(t *testing.T) {
 	pods := []kube.PodInfo{
 		makePod("pod-a", "default", "node-1", "Deployment", 1000, 1000000000),

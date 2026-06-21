@@ -275,7 +275,7 @@ hanoi-cli respects Kubernetes scheduling rules:
 - **Node selectors** and **node affinity** rules are enforced
 - **Pod affinity/anti-affinity** (required) is enforced; preferred rules are reported in explain
 - **Taints and tolerations** are checked (including `Exists` operator edge cases)
-- **Capacity limits** are respected - both CPU and memory (no overcommit on simulated reschedules)
+- **Capacity limits** are respected - no move is suggested that would exceed a node's allocatable CPU or memory
 - **Init containers** are accounted for using `max(sum(containers), max(initContainers))`
 
 ## Environment Variables
