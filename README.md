@@ -39,7 +39,8 @@ Suggested Moves: 2
 
 ```bash
 brew tap k-krew/tap
-brew install hanoi-cli
+brew trust k-krew/tap
+brew install --cask hanoi-cli
 ```
 
 ### From source
