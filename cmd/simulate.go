@@ -55,6 +55,7 @@ func runSimulate(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return fmt.Errorf("fetching pods: %w", err)
 	}
+	pods = filterPods(pods, excludeNamespaces)
 
 	result := simulator.SimulateNodeFailure(nodes, pods, nodeName)
 

@@ -46,6 +46,7 @@ func runAnalyze(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return fmt.Errorf("fetching pods: %w", err)
 	}
+	pods = filterPods(pods, excludeNamespaces)
 
 	plan := planner.GeneratePlan(nodes, pods, resource, maxMoves)
 

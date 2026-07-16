@@ -84,13 +84,14 @@ hanoi-cli simulate node-3 [flags]
 ### Global Flags
 
 
-| Flag           | Short | Default          | Description                                  |
-| -------------- | ----- | ---------------- | -------------------------------------------- |
-| `--kubeconfig` |       | `~/.kube/config` | Path to kubeconfig file                      |
-| `--context`    |       | current context  | Kubernetes context to use                    |
-| `--namespace`  | `-n`  | all namespaces   | Limit to a specific namespace                |
-| `--output`     | `-o`  | `text`           | Output format: `text`, `json`, `short`, `ui`, `md` |
-| `--explain`    |       |                  | Explain why move N was chosen (1-based)      |
+| Flag                    | Short | Default          | Description                                        |
+| ----------------------- | ----- | ---------------- | -------------------------------------------------- |
+| `--kubeconfig`          |       | `~/.kube/config` | Path to kubeconfig file                            |
+| `--context`             |       | current context  | Kubernetes context to use                          |
+| `--namespace`           | `-n`  | all namespaces   | Limit to a specific namespace                      |
+| `--exclude-namespace`   | `-e`  |                  | Namespaces to exclude (comma-separated or repeatable); mutually exclusive with `-n` |
+| `--output`              | `-o`  | `text`           | Output format: `text`, `json`, `short`, `ui`, `md` |
+| `--explain`             |       |                  | Explain why move N was chosen (1-based)            |
 
 
 ## Output Formats

@@ -5,15 +5,18 @@ import (
 	"os"
 	"path/filepath"
 
+	"hanoi-cli/kube"
+
 	"github.com/spf13/cobra"
 )
 
 var (
-	kubeconfig  string
-	kubeContext string
-	namespace   string
-	output      string
-	explainMove int
+	kubeconfig         string
+	kubeContext        string
+	namespace          string
+	output             string
+	explainMove        int
+	excludeNamespaces  []string
 )
 
 var validOutputFormats = map[string]bool{
@@ -32,6 +35,9 @@ var rootCmd = &cobra.Command{
 		if !validOutputFormats[output] {
 			return fmt.Errorf("invalid output format %q: must be one of text, json, short, ui, md", output)
 		}
+		if namespace != "" && len(excludeNamespaces) > 0 {
+			return fmt.Errorf("--namespace and --exclude-namespace are mutually exclusive")
+		}
 		return nil
 	},
 }
@@ -40,8 +46,26 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&kubeconfig, "kubeconfig", defaultKubeconfig(), "path to kubeconfig file")
 	rootCmd.PersistentFlags().StringVar(&kubeContext, "context", envStr("HANOI_CONTEXT", ""), "kubernetes context to use (default: current context from kubeconfig)")
 	rootCmd.PersistentFlags().StringVarP(&namespace, "namespace", "n", "", "kubernetes namespace (default: all namespaces)")
+	rootCmd.PersistentFlags().StringSliceVarP(&excludeNamespaces, "exclude-namespace", "e", nil, "namespaces to exclude from analysis (comma-separated or repeatable)")
 	rootCmd.PersistentFlags().StringVarP(&output, "output", "o", "text", "output format: text, json, short, ui, md")
 	rootCmd.PersistentFlags().IntVar(&explainMove, "explain", 0, "explain why move N was chosen (1-based)")
+}
+
+func filterPods(pods []kube.PodInfo, excluded []string) []kube.PodInfo {
+	if len(excluded) == 0 {
+		return pods
+	}
+	set := make(map[string]bool, len(excluded))
+	for _, ns := range excluded {
+		set[ns] = true
+	}
+	result := make([]kube.PodInfo, 0, len(pods))
+	for _, p := range pods {
+		if !set[p.Namespace] {
+			result = append(result, p)
+		}
+	}
+	return result
 }
 
 func Execute() error {
