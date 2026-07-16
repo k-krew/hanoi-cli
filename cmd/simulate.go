@@ -37,6 +37,10 @@ func runSimulate(cmd *cobra.Command, args []string) error {
 	nodeName := args[0]
 	ctx := context.Background()
 
+	if cmd.Flags().Changed("namespace") || cmd.Flags().Changed("exclude-namespace") {
+		return fmt.Errorf("--namespace and --exclude-namespace are not supported for simulate: all pods must be considered to accurately assess node capacity")
+	}
+
 	client, err := kube.NewClient(kubeconfig, kubeContext)
 	if err != nil {
 		return fmt.Errorf("connecting to cluster: %w", err)
@@ -55,7 +59,6 @@ func runSimulate(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return fmt.Errorf("fetching pods: %w", err)
 	}
-	pods = markOutOfScope(pods, namespace, excludeNamespaces)
 
 	result := simulator.SimulateNodeFailure(nodes, pods, nodeName)
 
