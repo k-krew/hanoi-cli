@@ -51,11 +51,11 @@ func runSimulate(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("node %q does not exist in the cluster", nodeName)
 	}
 
-	pods, err := client.GetPods(ctx, namespace)
+	pods, err := client.GetPods(ctx, "")
 	if err != nil {
 		return fmt.Errorf("fetching pods: %w", err)
 	}
-	pods = filterPods(pods, excludeNamespaces)
+	pods = markOutOfScope(pods, namespace, excludeNamespaces)
 
 	result := simulator.SimulateNodeFailure(nodes, pods, nodeName)
 

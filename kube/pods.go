@@ -21,6 +21,7 @@ type PodInfo struct {
 	Limits       Resources
 	Tolerations  []corev1.Toleration
 	Affinity     *corev1.Affinity
+	Pinned       bool // true when the pod is out of the user-specified namespace scope and must not be suggested as a move candidate
 }
 
 func (c *Client) GetPods(ctx context.Context, namespace string) ([]PodInfo, error) {

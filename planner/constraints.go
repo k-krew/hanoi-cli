@@ -9,7 +9,7 @@ import (
 )
 
 func IsMovable(pod kube.PodInfo) bool {
-	return pod.OwnerKind != "DaemonSet"
+	return pod.OwnerKind != "DaemonSet" && !pod.Pinned
 }
 
 func CanScheduleOn(pod kube.PodInfo, node kube.NodeInfo, allPods []kube.PodInfo, allNodes []kube.NodeInfo) bool {

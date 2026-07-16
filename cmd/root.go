@@ -51,18 +51,23 @@ func init() {
 	rootCmd.PersistentFlags().IntVar(&explainMove, "explain", 0, "explain why move N was chosen (1-based)")
 }
 
-func filterPods(pods []kube.PodInfo, excluded []string) []kube.PodInfo {
-	if len(excluded) == 0 {
+// markOutOfScope pins pods that fall outside the user's namespace scope so they
+// remain counted in utilization scoring but are never suggested as move candidates.
+func markOutOfScope(pods []kube.PodInfo, targetNamespace string, excludedNamespaces []string) []kube.PodInfo {
+	if targetNamespace == "" && len(excludedNamespaces) == 0 {
 		return pods
 	}
-	set := make(map[string]bool, len(excluded))
-	for _, ns := range excluded {
-		set[ns] = true
+	excluded := make(map[string]bool, len(excludedNamespaces))
+	for _, ns := range excludedNamespaces {
+		excluded[ns] = true
 	}
-	result := make([]kube.PodInfo, 0, len(pods))
-	for _, p := range pods {
-		if !set[p.Namespace] {
-			result = append(result, p)
+	result := make([]kube.PodInfo, len(pods))
+	copy(result, pods)
+	for i := range result {
+		ns := result[i].Namespace
+		outOfScope := (targetNamespace != "" && ns != targetNamespace) || excluded[ns]
+		if outOfScope {
+			result[i].Pinned = true
 		}
 	}
 	return result
